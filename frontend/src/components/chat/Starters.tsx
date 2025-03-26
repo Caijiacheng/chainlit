@@ -3,7 +3,8 @@ import { useMemo } from 'react';
 
 import { useChatSession, useConfig } from '@chainlit/react-client';
 
-import Starter from './Starter';
+// import Starter from './Starter';
+import StarterEx from './StarterEx';
 
 interface Props {
   className?: string;
@@ -30,7 +31,8 @@ export default function Starters({ className }: Props) {
   return (
     <div className={cn('flex gap-2 justify-center flex-wrap', className)}>
       {starters?.map((starter, i) => (
-        <Starter key={i} starter={starter} />
+        // <Starter key={i} starter={starter} />
+        <StarterEx key={i} starter={starter} />
       ))}
     </div>
   );
