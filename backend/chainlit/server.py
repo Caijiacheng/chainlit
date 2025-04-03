@@ -80,6 +80,9 @@ mimetypes.add_type("text/css", ".css")
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Context manager to handle app start and shutdown."""
+    if config.code.on_app_startup:
+        await config.code.on_app_startup()
+
     host = config.run.host
     port = config.run.port
     root_path = os.getenv("CHAINLIT_ROOT_PATH", "")
@@ -145,6 +148,9 @@ async def lifespan(app: FastAPI):
         yield
     finally:
         try:
+            if config.code.on_app_shutdown:
+                await config.code.on_app_shutdown()
+
             if watch_task:
                 stop_event.set()
                 watch_task.cancel()
@@ -1433,13 +1439,13 @@ async def get_logo(theme: Optional[Theme] = Query(Theme.light)):
 @router.get("/avatars/{avatar_id:str}")
 async def get_avatar(avatar_id: str):
     """Get the avatar for the user based on the avatar_id."""
-    if not re.match(r"^[a-zA-Z0-9_ -]+$", avatar_id):
+    if not re.match(r"^[a-zA-Z0-9_ .-]+$", avatar_id):
         raise HTTPException(status_code=400, detail="Invalid avatar_id")
 
     if avatar_id == "default":
         avatar_id = config.ui.name
 
-    avatar_id = avatar_id.strip().lower().replace(" ", "_")
+    avatar_id = avatar_id.strip().lower().replace(" ", "_").replace(".", "_")
 
     base_path = Path(APP_ROOT) / "public" / "avatars"
     avatar_pattern = f"{avatar_id}.*"
@@ -1449,7 +1455,6 @@ async def get_avatar(avatar_id: str):
     if avatar_path := next(matching_files, None):
         if not is_path_inside(avatar_path, base_path):
             raise HTTPException(status_code=400, detail="Invalid filename")
-
         media_type, _ = mimetypes.guess_type(str(avatar_path))
 
         return FileResponse(avatar_path, media_type=media_type)

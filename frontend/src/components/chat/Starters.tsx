@@ -29,7 +29,10 @@ export default function Starters({ className }: Props) {
   if (!starters?.length) return null;
 
   return (
-    <div className={cn('flex gap-2 justify-center flex-wrap', className)}>
+    <div
+      id="starters"
+      className={cn('flex gap-2 justify-center flex-wrap', className)}
+    >
       {starters?.map((starter, i) => (
         // <Starter key={i} starter={starter} />
         <StarterEx key={i} starter={starter} />

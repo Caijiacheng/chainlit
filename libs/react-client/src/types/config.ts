@@ -23,6 +23,7 @@ export interface IAuthConfig {
   headerAuth: boolean;
   oauthProviders: string[];
   default_theme?: 'light' | 'dark';
+  ui?: IChainlitConfig['ui'];
 }
 
 export interface IChainlitConfig {
@@ -33,11 +34,15 @@ export interface IChainlitConfig {
     font_family?: string;
     default_theme?: 'light' | 'dark';
     layout?: 'default' | 'wide';
+    default_sidebar_state?: 'open' | 'closed';
     cot: 'hidden' | 'tool_call' | 'full';
     github?: string;
     custom_css?: string;
     custom_js?: string;
     custom_font?: string;
+    login_page_image?: string;
+    login_page_image_filter?: string;
+    login_page_image_dark_filter?: string;
     custom_meta_image_url?: string;
     header_links?: { name: string; icon_url: string; url: string }[];
   };
